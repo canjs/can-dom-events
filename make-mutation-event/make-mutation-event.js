@@ -2,16 +2,16 @@
 // mutation observers are present.  If they aren't you have to use
 // the mutate methods.
 
-var isEmptyObject = require("../../../js/isEmptyObject/");
+var isEmptyObject = require("../../../js/is-empty-object/");
 var assign = require("../../../js/assign/");
 var each = require("../../../js/each/");
 
 var events = require("../events");
-var isOfGlobalDocument = require("../../isOfGlobalDocument/");
+var isOfGlobalDocument = require("../../is-of-global-document/");
 var domData = require("../../data/");
-var getMutationObserver = require("../../mutationObserver/");
+var getMutationObserver = require("../../mutation-observer/");
 var domDispatch = require("../../dispatch/");
-var mutationDocument = require("../../mutationObserver/document/");
+var mutationDocument = require("../../mutation-observer/document/");
 var getDocument = require("../../document/");
 
 

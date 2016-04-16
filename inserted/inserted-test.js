@@ -1,6 +1,6 @@
 require('can-util/dom/events/inserted/');
 var domEvents = require('can-util/dom/events/');
-var getMutationObserver = require('can-util/dom/mutationObserver/');
+var getMutationObserver = require('can-util/dom/mutation-observer/');
 var domMutate = require("can-util/dom/mutate/");
 
 QUnit = require('steal-qunit');
