@@ -11,12 +11,12 @@ function isDispatchingOnDisabled(element, ev) {
 	return isInsertedOrRemoved && isDisabled;
 }
 /**
- * @module {{}} can-util/dom/events/events events
- * @parent can-util/dom
+ * @module {{}} can-dom-events
+ * @parent can-infrastructure
  * @description Allows you to listen to a domEvent and special domEvents as well as dispatch domEvents.
  *
  * ```js
- * var domEvents = require("can-util/dom/events/events");
+ * var domEvents = require("can-dom-events");
  * ```
  */
 module.exports = {
