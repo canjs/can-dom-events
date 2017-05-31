@@ -50,7 +50,7 @@
     "release:minor": "npm version minor && npm publish",
     "release:patch": "npm version patch && npm publish",
     "test": "npm run lint && npm run testee",
-    "testee": "testee test.html --browsers firefox --reporter Spec",
+    "testee": "testee test.html --browsers firefox",
     "version": "git commit -am \"Update version number\" && git checkout -b release && git add -f dist/"
   },
   "steal": {
