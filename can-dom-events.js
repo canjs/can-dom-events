@@ -1,5 +1,6 @@
 'use strict';
 
+var namespace = require('can-namespace');
 var _document = require("can-util/dom/document/document");
 var isBrowserWindow = require("can-util/js/is-browser-window/is-browser-window");
 var isPlainObject = require("can-util/js/is-plain-object/is-plain-object");
@@ -19,7 +20,7 @@ function isDispatchingOnDisabled(element, ev) {
  * var domEvents = require("can-dom-events");
  * ```
  */
-module.exports = {
+module.exports = namespace.domEvents = {
 	addEventListener: function(){
 		this.addEventListener.apply(this, arguments);
 	},
