@@ -1,5 +1,7 @@
 # can-dom-events
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-dom-events.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/canjs/can-dom-events.png?branch=master)](https://travis-ci.org/canjs/can-dom-events)
 
 Listen for native and custom DOM events
