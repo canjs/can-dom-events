@@ -10,6 +10,9 @@
   "bugs": {
     "url": "https://github.com/canjs/can-dom-events/issues"
   },
+  "dependencies": {
+    "can-util": "^3.8.1"
+  },
   "devDependencies": {
     "fixpack": "^2.3.1",
     "jshint": "^2.9.1",
@@ -38,7 +41,7 @@
   },
   "scripts": {
     "build": "node build.js",
-    "jshint": "jshint ./*.js ./src/ --config",
+    "jshint": "jshint ./*.js --config",
     "lint": "fixpack && npm run jshint",
     "postpublish": "git push --tags && git checkout master && git branch -D release && git push",
     "preversion": "npm test && npm run build",
