@@ -16,7 +16,7 @@ function isNewEvents (obj) {
     return typeof obj.addEvent === 'function';
 }
 
-module.exports = function addEvent (domEvents, customEvent, customEventType) {
+module.exports = function addEventCompat (domEvents, customEvent, customEventType) {
 	if (!isDomEvents(domEvents)) {
 		throw new Error ('addEvent() must be passed domEvents');
 	}
