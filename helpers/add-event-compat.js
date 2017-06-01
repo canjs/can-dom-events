@@ -1,3 +1,4 @@
+'use strict';
 /*
 	This module conforms to the can-util 3.x custom event
 	overriding behavior. This module is a compatibility
