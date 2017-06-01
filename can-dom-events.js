@@ -20,48 +20,33 @@ var domEvents = {
         return this._eventRegistry.add(event, eventType);
     },
 
-	addEventListener: function() {
-        var args = util.addDomContext(this, arguments);
-        var eventType = args[1];
+	addEventListener: function(target, eventType) {
         var hasCustomEvent = domEvents._eventRegistry.has(eventType);
         if (hasCustomEvent) {
-            var eventDefinition = domEvents._eventRegistry.get(eventType);
-            return eventDefinition.addEventListener.apply(domEvents, args);
+            var event = domEvents._eventRegistry.get(eventType);
+            return event.addEventListener.apply(domEvents, arguments);
         }
 
-        var target = args[0];
-		var eventArgs = Array.prototype.slice.call(args, 1);
+		var eventArgs = Array.prototype.slice.call(arguments, 1);
         return target.addEventListener.apply(target, eventArgs);
 	},
     
-	removeEventListener: function() {
-        var args = util.addDomContext(this, arguments);
-        var eventType = args[1];
+	removeEventListener: function(target, eventType) {
         var hasCustomEvent = domEvents._eventRegistry.has(eventType);
         if (hasCustomEvent) {
-            var eventDefinition = domEvents._eventRegistry.get(eventType);
-            return eventDefinition.removeEventListener.apply(domEvents, args);
+            var event = domEvents._eventRegistry.get(eventType);
+            return event.removeEventListener.apply(domEvents, arguments);
         }
 
-		var target = args[0];
-		var eventArgs = Array.prototype.slice.call(args, 1);
+		var eventArgs = Array.prototype.slice.call(arguments, 1);
         return target.removeEventListener.apply(target, eventArgs);
 	},
 
-	canAddEventListener: function() {
-        var target = util.addDomContext(this, arguments)[0];
-		return util.isDomEventTarget(target);
-	},
+	canAddEventListener: util.isDomEventTarget,
 
-	dispatch: function() {
-        var args = util.addDomContext(this, arguments);
-        var target = args[0];
-        var eventData = args[1];
-        var eventArgs = args[2];
-        var bubbles = args[3];
+	dispatch: function(target, eventData, eventArgs, bubbles) {
         var cancelable = false;
-
-		var event = util.createEvent(this, eventData, eventArgs, bubbles, cancelable);
+		var event = util.createEvent(target, eventData, eventArgs, bubbles, cancelable);
 		var enableForDispatch = util.forceEnabledForDispatch(target, event);
 		if(enableForDispatch) {
 			target.disabled = false;

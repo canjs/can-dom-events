@@ -19,9 +19,7 @@ module.exports = function addEventJQuery (jQuery, customEvent, customEventType) 
         removeEventListener (target, eventType, handler) {
             $(target).off(eventType, handler);
         },
-        canAddEventListener (target) {
-            return util.isDomEventTarget(target);
-        },
+        canAddEventListener: util.isDomEventTarget,
         dispatch (target) {
             var event = util.createEvent.apply(null, arguments);
             $(target).trigger(event);
