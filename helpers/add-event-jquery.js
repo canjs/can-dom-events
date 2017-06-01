@@ -1,3 +1,4 @@
+'use strict';
 /*
     This module makes can-dom-event custom events
     work with jQuery instead of can-dom-events.
