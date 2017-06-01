@@ -83,3 +83,4 @@ unit.test('domEvents.dispatch works', function (assert) {
 
 require('./helpers/make-event-registry-test');
 require('./helpers/add-event-compat-test');
+require('./helpers/add-event-jquery-test');
