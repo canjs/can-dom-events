@@ -37,13 +37,13 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
             var data = removeDomContext(this, arguments);
             return domEvents.removeEventListener.apply(data.context, data.args);
         },
-        canAddEventListener () {
-            var data = removeDomContext(this, arguments);
-            return domEvents.canAddEventListener.apply(data.context, data.args);
-        },
         dispatch () {
-            var data = removeDomContext(this, arguments);
-            return domEvents.dispatch.apply(data.context, data.args);
+			var data = removeDomContext(this, arguments);
+			// in can-util, dispatch had args as its own parameter
+			var eventData = data.args[0];
+			var eventArgs = typeof eventData === 'object' ? eventData.args : [];
+			data.args.splice(1, 0, eventArgs);
+			return domEvents.dispatch.apply(data.context, data.args);
         }
     };
 

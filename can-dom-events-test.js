@@ -44,25 +44,6 @@ unit.test('domEvents.removeEventListener works', function (assert) {
     input.dispatchEvent(event2);
 });
 
-unit.test('domEvents.canAddEventListener works', function (assert) {
-    // Our definition of what can be addEventListener-ed to
-    // is more strict than EventTarget. 
-    // It must be a DOM Node, Document, or window.
-    var element = document.createElement('div');
-    assert.equal(domEvents.canAddEventListener(element), true, 'Elements work');
-
-    assert.equal(domEvents.canAddEventListener(document), true, 'Documents work');
-
-    assert.equal(domEvents.canAddEventListener(window), true, 'Window works');
-
-    assert.equal(domEvents.canAddEventListener(8), false, 'Numbers should not work');
-    assert.equal(domEvents.canAddEventListener("foo"), false, 'Strings should not work');
-    assert.equal(domEvents.canAddEventListener({a: 1}), false, 'Plain objects should not work');
-
-    var textNode = document.createTextNode('boi');
-    assert.equal(domEvents.canAddEventListener(textNode), false, 'Text nodes should not work');
-});
-
 unit.test('domEvents.dispatch works', function (assert) {
     // NOTE: dispatching should work no matter how a listener was add.
     // So we use the native addEventListener to isolate the dispatch.
@@ -84,3 +65,4 @@ unit.test('domEvents.dispatch works', function (assert) {
 require('./helpers/make-event-registry-test');
 require('./helpers/add-event-compat-test');
 require('./helpers/add-event-jquery-test');
+require('./helpers/util-test');

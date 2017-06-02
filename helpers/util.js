@@ -7,13 +7,12 @@ function getTargetDocument (target) {
     return target.ownerDocument || getCurrentDocument();
 }
 
-function createEvent (target, eventData, args, bubbles, cancelable) {
+function createEvent (target, eventData, bubbles, cancelable) {
     var doc = getTargetDocument(target);
     var event = doc.createEvent('HTMLEvents');
     var eventType;
     if (typeof eventData === 'string') {
         eventType = eventData;
-        eventData = {};
     } else {
         eventType = event.type;
         for (var prop in eventData) {
@@ -24,9 +23,6 @@ function createEvent (target, eventData, args, bubbles, cancelable) {
     }
     if (bubbles === undefined) {
         bubbles = true;
-    }
-    if (args) {
-        event.args = args;
     }
     event.initEvent(eventType, bubbles, cancelable);
     return event;
