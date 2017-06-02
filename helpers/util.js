@@ -4,61 +4,57 @@ var getCurrentDocument = require("can-util/dom/document/document");
 var isBrowserWindow = require("can-util/js/is-browser-window/is-browser-window");
 
 function getTargetDocument (target) {
-    return target.ownerDocument || getCurrentDocument();
+	return target.ownerDocument || getCurrentDocument();
 }
 
-function createEvent (target, eventData, args, bubbles, cancelable) {
-    var doc = getTargetDocument(target);
-    var event = doc.createEvent('HTMLEvents');
-    var eventType;
-    if (typeof eventData === 'string') {
-        eventType = eventData;
-        eventData = {};
-    } else {
-        eventType = event.type;
-        for (var prop in eventData) {
+function createEvent (target, eventData, bubbles, cancelable) {
+	var doc = getTargetDocument(target);
+	var event = doc.createEvent('HTMLEvents');
+	var eventType;
+	if (typeof eventData === 'string') {
+		eventType = eventData;
+	} else {
+		eventType = event.type;
+		for (var prop in eventData) {
 			if (event[prop] === undefined) {
 				event[prop] = event[prop];
 			}
 		}
-    }
-    if (bubbles === undefined) {
-        bubbles = true;
-    }
-    if (args) {
-        event.args = args;
-    }
-    event.initEvent(eventType, bubbles, cancelable);
-    return event;
+	}
+	if (bubbles === undefined) {
+		bubbles = true;
+	}
+	event.initEvent(eventType, bubbles, cancelable);
+	return event;
 }
 
 // We do not account for all EventTarget classes,
 // only EventTarget DOM nodes and the window.
 function isDomEventTarget (obj) {
-    if (!(obj && obj.nodeName)) {
-        return obj === window;
-    }
-    var nodeType = obj.nodeType;
-    return nodeType === Node.DOCUMENT_NODE || nodeType === Node.ELEMENT_NODE;
+	if (!(obj && obj.nodeName)) {
+		return obj === window;
+	}
+	var nodeType = obj.nodeType;
+	return nodeType === Node.DOCUMENT_NODE || nodeType === Node.ELEMENT_NODE;
 }
 
 function addDomContext (context, args) {
-    if (isDomEventTarget(context)) {
-        args = Array.prototype.slice.call(args, 0);
-        args.unshift(context);
-    }
-    return args;
+	if (isDomEventTarget(context)) {
+		args = Array.prototype.slice.call(args, 0);
+		args.unshift(context);
+	}
+	return args;
 }
 
 function removeDomContext (context, args) {
-    if (!isDomEventTarget(context)) {
-        args = Array.prototype.slice.call(args, 0);
-        context = args.shift();
-    }
-    return {
-        context: context,
-        args: args
-    };
+	if (!isDomEventTarget(context)) {
+		args = Array.prototype.slice.call(args, 0);
+		context = args.shift();
+	}
+	return {
+		context: context,
+		args: args
+	};
 }
 
 var fixSyntheticEventsOnDisabled = false;
@@ -83,8 +79,8 @@ var fixSyntheticEventsOnDisabled = false;
 	};
 	input.addEventListener(testEventName, onTest);
 	try {
-        var event = document.create('HTMLEvents');
-        event.initEvent(testEventName, false);
+		var event = document.create('HTMLEvents');
+		event.initEvent(testEventName, false);
 		input.dispatchEvent(event);
 	} catch(e) {
 		onTest();
@@ -93,21 +89,21 @@ var fixSyntheticEventsOnDisabled = false;
 })();
 
 function isDispatchingOnDisabled(element, event) {
-    var eventType = event.type;
+	var eventType = event.type;
 	var isInsertedOrRemoved = eventType === 'inserted' || eventType === 'removed';
 	var isDisabled = !!element.disabled;
 	return isInsertedOrRemoved && isDisabled;
 }
 
 function forceEnabledForDispatch (element, event) {
-    return fixSyntheticEventsOnDisabled && isDispatchingOnDisabled(element, event);
+	return fixSyntheticEventsOnDisabled && isDispatchingOnDisabled(element, event);
 }
 
 module.exports = {
-    createEvent: createEvent,
-    addDomContext: addDomContext,
-    removeDomContext: removeDomContext,
-    isDomEventTarget: isDomEventTarget,
-    getTargetDocument: getTargetDocument,
-    forceEnabledForDispatch: forceEnabledForDispatch
+	createEvent: createEvent,
+	addDomContext: addDomContext,
+	removeDomContext: removeDomContext,
+	isDomEventTarget: isDomEventTarget,
+	getTargetDocument: getTargetDocument,
+	forceEnabledForDispatch: forceEnabledForDispatch
 };

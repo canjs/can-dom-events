@@ -2,7 +2,7 @@
 /*
 	This module conforms to the can-util 3.x custom event
 	overriding behavior. This module is a compatibility
-    layer for using new custom events.
+	layer for using new custom events.
 */
 
 var util = require('./util');
@@ -14,7 +14,7 @@ function isDomEvents (obj) {
 }
 
 function isNewEvents (obj) {
-    return typeof obj.addEvent === 'function';
+	return typeof obj.addEvent === 'function';
 }
 
 module.exports = function addEventCompat (domEvents, customEvent, customEventType) {
@@ -22,36 +22,36 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 		throw new Error ('addEvent() must be passed domEvents');
 	}
 
-    if (isNewEvents(domEvents)) {
-        return domEvents.addEvent(customEvent, customEventType);
-    }
+	if (isNewEvents(domEvents)) {
+		return domEvents.addEvent(customEvent, customEventType);
+	}
 
-    customEventType = customEventType || customEvent.defaultEventType;
+	customEventType = customEventType || customEvent.defaultEventType;
 
-    var newEvents = {
-        addEventListener () {
-            var data = removeDomContext(this, arguments);
-            return domEvents.addEventListener.apply(data.context, data.args);
-        },
-        removeEventListener () {
-            var data = removeDomContext(this, arguments);
-            return domEvents.removeEventListener.apply(data.context, data.args);
-        },
-        canAddEventListener () {
-            var data = removeDomContext(this, arguments);
-            return domEvents.canAddEventListener.apply(data.context, data.args);
-        },
-        dispatch () {
-            var data = removeDomContext(this, arguments);
-            return domEvents.dispatch.apply(data.context, data.args);
-        }
-    };
+	var newEvents = {
+		addEventListener () {
+			var data = removeDomContext(this, arguments);
+			return domEvents.addEventListener.apply(data.context, data.args);
+		},
+		removeEventListener () {
+			var data = removeDomContext(this, arguments);
+			return domEvents.removeEventListener.apply(data.context, data.args);
+		},
+		dispatch () {
+			var data = removeDomContext(this, arguments);
+			// in can-util, dispatch had args as its own parameter
+			var eventData = data.args[0];
+			var eventArgs = typeof eventData === 'object' ? eventData.args : [];
+			data.args.splice(1, 0, eventArgs);
+			return domEvents.dispatch.apply(data.context, data.args);
+		}
+	};
 
 	var isOverriding = true;
 	var oldAddEventListener = domEvents.addEventListener;
 	var addEventListener = domEvents.addEventListener = function (eventName) {
 		if (isOverriding && eventName === customEventType) {
-            var args = addDomContext(this, arguments);
+			var args = addDomContext(this, arguments);
 			customEvent.addEventListener.apply(newEvents, args);
 		}
 		return oldAddEventListener.apply(this, arguments);
@@ -60,7 +60,7 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 	var oldRemoveEventListener = domEvents.removeEventListener;
 	var removeEventListener = domEvents.removeEventListener = function (eventName) {
 		if (isOverriding && eventName === customEventType) {
-            var args = addDomContext(this, arguments);
+			var args = addDomContext(this, arguments);
 			customEvent.removeEventListener.apply(newEvents, args);
 		}
 		return oldRemoveEventListener.apply(this, arguments);
