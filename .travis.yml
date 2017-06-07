@@ -3,7 +3,7 @@ node_js: node
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-	- "npm i -g greenkeeper-lockfile@1"
+  - "npm i -g greenkeeper-lockfile@1"
 before_script: greenkeeper-lockfile-update
 after_script: greenkeeper-lockfile-upload
 matrix:
