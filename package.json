@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "can-namespace": "^1.0.0",
-    "can-util": "^3.8.1"
+    "can-util": "^3.8.4"
   },
   "devDependencies": {
     "fixpack": "^2.3.1",
