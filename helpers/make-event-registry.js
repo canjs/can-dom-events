@@ -1,5 +1,9 @@
 'use strict';
 
+function EventRegistry () {
+	this._registry = {};
+}
+
 /**
  * @module can-dom-events/helpers/make-event-registry
  * @parent can-dom-events.helpers
@@ -25,10 +29,6 @@
 module.exports = function makeEventRegistry () {
 	return new EventRegistry();
 };
-
-function EventRegistry () {
-	this._registry = {};
-}
 
 /**
  * @function make-event-registry.has has
