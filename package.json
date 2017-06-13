@@ -58,9 +58,6 @@
   },
   "steal": {
     "main": "can-dom-events",
-    "configDependencies": [
-      "live-reload"
-    ],
     "npmIgnore": [
       "testee",
       "steal-tools"
