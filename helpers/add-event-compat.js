@@ -22,11 +22,10 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 		throw new Error ('addEvent() must be passed domEvents');
 	}
 
+	customEventType = customEventType || customEvent.defaultEventType;
 	if (isNewEvents(domEvents)) {
 		return domEvents.addEvent(customEvent, customEventType);
 	}
-
-	customEventType = customEventType || customEvent.defaultEventType;
 
 	var newEvents = {
 		addEventListener () {
