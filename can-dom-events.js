@@ -97,7 +97,7 @@ var domEvents = {
 	*
 	* Create and dispatch a configured event on the target.
 	*
-	* @signature `dispatch( target, eventData, eventArgs [, bubbles ][, cancelable ] )`
+	* @signature `dispatch( target, eventData [, bubbles ][, cancelable ] )`
 	* @parent can-dom-events.static
 	* @param {DomEventTarget} target The object to which to add the listener.
 	* @param {Object | String} eventData The data to be assigned to the event. If it is a string, that will be the event type.
