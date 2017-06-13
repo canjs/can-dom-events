@@ -31,7 +31,7 @@ module.exports = function makeEventRegistry () {
 };
 
 /**
- * @function make-event-registry.has has
+ * @function make-event-registry.has eventRegistry.has
  *
  * Check whether an event type has already been registered.
  *
@@ -45,7 +45,7 @@ EventRegistry.prototype.has = function (eventType) {
 };
 
 /**
- * @function make-event-registry.get get
+ * @function make-event-registry.get eventRegistry.get
  *
  * Retrieve an event type which has already been registered.
  *
@@ -59,7 +59,7 @@ EventRegistry.prototype.get = function (eventType) {
 };
 
 /**
- * @function make-event-registry.add add
+ * @function make-event-registry.add eventRegistry.add
  *
  * Add an event to the registry.
  *
