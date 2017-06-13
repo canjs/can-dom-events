@@ -1,7 +1,7 @@
 {
   "name": "can-dom-events",
   "description": "Listen for native and custom DOM events",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Chris Andrejewski",
     "email": "core@donejs.com",
