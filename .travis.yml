@@ -1,15 +1,23 @@
 language: node_js
 node_js: node
 before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-  - "npm i -g greenkeeper-lockfile@1"
+- export DISPLAY=:99.0
+- sh -e /etc/init.d/xvfb start
+- npm i -g greenkeeper-lockfile@1
 before_script: greenkeeper-lockfile-update
 after_script: greenkeeper-lockfile-upload
 matrix:
   include:
-    - env: INSTALL_TYPE="locked"
-    - env: INSTALL_TYPE="canary"
+  - env: INSTALL_TYPE="locked"
+  - env: INSTALL_TYPE="canary"
 install: npm run install-$INSTALL_TYPE
 addons:
-  firefox: "51.0"
+  firefox: '51.0'
+deploy:
+  provider: npm
+  email: chris_andrejewski@bitovi.com
+  api_key:
+    secure: UnFlh8XMBuZVMG2KEhiIDrkD/cPENPQLYQG30bczxuMLZ+2je8bxO6IRwHIjpJ3LdNzWKaj0FIu13A01CywebuTd2Q+XrlwRLSqx53c+pD4FPhX7DnJD1YEwmr+Z0rZ+4LlGoEZWWzl+P4Vcmgg93ZIywl0AcbCS7X2r8cq/bo5GfeiHl6vlheIz1gNgWFNur6Rjq6Lz7ws4gjbDPHlMxNBIhEOmMf0MGjnz40oF/VzJ0Vj4hqbJ57lFIdFNni0QzCekM5hdDFqu9xe1ligmeFwPwl69ltizZ3+IE+qncDjSItQhdZgbY9HhLiWzg2CCW0rUk3/MenEsPRQk60z5Tn9iZKWN1iN7zfHP7qkJFlH7yllSB8GAZoRLheysPl5oSDy7F74M0wZ94Q+nwwOcdck1+oexF6Aluv2MlmDP9//ZE99HUKHgXLTc+6WwJOC96J4EfDItoBRoa1sC4pdEtz2yabj9yMpUISDfbM5Mf4G0VkLUpBmbAQrIjG0APMMfs762yXiyRVJwmGQdEl6GTViCxoq1mAxrl96pinmyjCTFxZhQNNDS8ZNlMpzUotygcGfZZFIwHJ9Hw8VPM5xDoXnRqkC7pX0C4wNXDzS2i5vUbcB4B/Cd12/g9c9aMIZETQ8XyqxciiUiv0MtbJdkoSaWQk/bb3nEVJAuCRqDcvk=
+  on:
+    tags: true
+    repo: canjs/can-dom-events
