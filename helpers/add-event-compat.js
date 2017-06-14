@@ -10,7 +10,7 @@ var addDomContext = util.addDomContext;
 var removeDomContext = util.removeDomContext;
 
 function isDomEvents (obj) {
-	return !!(obj && obj.addEventListener && obj.removeEventListener);
+	return !!(obj && obj.addEventListener && obj.removeEventListener && obj.dispatch);
 }
 
 function isNewEvents (obj) {
@@ -19,7 +19,7 @@ function isNewEvents (obj) {
 
 module.exports = function addEventCompat (domEvents, customEvent, customEventType) {
 	if (!isDomEvents(domEvents)) {
-		throw new Error ('addEvent() must be passed domEvents');
+		throw new Error ('addEventCompat() must be passed can-dom-events or can-util/dom/events/events');
 	}
 
 	customEventType = customEventType || customEvent.defaultEventType;
@@ -28,15 +28,15 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 	}
 
 	var newEvents = {
-		addEventListener () {
+		addEventListener: function () {
 			var data = removeDomContext(this, arguments);
 			return domEvents.addEventListener.apply(data.context, data.args);
 		},
-		removeEventListener () {
+		removeEventListener: function () {
 			var data = removeDomContext(this, arguments);
 			return domEvents.removeEventListener.apply(data.context, data.args);
 		},
-		dispatch () {
+		dispatch: function () {
 			var data = removeDomContext(this, arguments);
 			// in can-util, dispatch had args as its own parameter
 			var eventData = data.args[0];
@@ -48,7 +48,7 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 
 	var isOverriding = true;
 	var oldAddEventListener = domEvents.addEventListener;
-	var addEventListener = domEvents.addEventListener = function (eventName) {
+	var addEventListener = domEvents.addEventListener = function addEventListener (eventName) {
 		if (isOverriding && eventName === customEventType) {
 			var args = addDomContext(this, arguments);
 			customEvent.addEventListener.apply(newEvents, args);
@@ -57,7 +57,7 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 	};
 
 	var oldRemoveEventListener = domEvents.removeEventListener;
-	var removeEventListener = domEvents.removeEventListener = function (eventName) {
+	var removeEventListener = domEvents.removeEventListener = function removeEventListener (eventName) {
 		if (isOverriding && eventName === customEventType) {
 			var args = addDomContext(this, arguments);
 			customEvent.removeEventListener.apply(newEvents, args);

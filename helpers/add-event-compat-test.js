@@ -4,14 +4,15 @@ var domEvents = require('../can-dom-events');
 
 var oldDomEventsMock = function (addSpy, removeSpy) {
 	return {
-		addEventListener () {
+		addEventListener: function () {
 			addSpy(this, arguments);
 			this.addEventListener.apply(this, arguments);
 		},
-		removeEventListener () {
+		removeEventListener: function () {
 			removeSpy(this, arguments);
 			this.removeEventListener.apply(this, arguments);
-		}
+		},
+		dispatch: function () {}
 	};
 };
 
@@ -20,11 +21,11 @@ unit.module('add-event-compat');
 var mockEvent = function (addSpy, removeSpy) {
 	return {
 		defaultEventType: 'boi',
-		addEventListener (target, eventName, handler) {
+		addEventListener: function (target, eventName, handler) {
 			addSpy(this, arguments);
 			this.addEventListener(target, 'boi2', handler);
 		},
-		removeEventListener (target, eventName, handler) {
+		removeEventListener: function (target, eventName, handler) {
 			removeSpy(this, arguments);
 			this.removeEventListener(target, 'boi2', handler);
 		}

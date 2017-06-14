@@ -14,13 +14,13 @@ module.exports = function addEventJQuery (jQuery, customEvent, customEventType) 
 	}
 
 	var domEvents = {
-		addEventListener (target, eventType, handler) {
+		addEventListener: function (target, eventType, handler) {
 			$(target).on(eventType, handler);
 		},
-		removeEventListener (target, eventType, handler) {
+		removeEventListener: function (target, eventType, handler) {
 			$(target).off(eventType, handler);
 		},
-		dispatch (target) {
+		dispatch: function (target) {
 			var event = util.createEvent.apply(null, arguments);
 			$(target).trigger(event);
 		}

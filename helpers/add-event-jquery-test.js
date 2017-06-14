@@ -7,11 +7,11 @@ unit.module('add-event-jquery');
 var mockEvent = function (firstEvent, secondEvent, addSpy, removeSpy) {
 	return {
 		defaultEventName: firstEvent,
-		addEventListener (target, eventName, handler) {
+		addEventListener: function (target, eventName, handler) {
 			addSpy(this, arguments);
 			this.addEventListener(target, secondEvent, handler);
 		},
-		removeEventListener (target, eventName, handler) {
+		removeEventListener: function (target, eventName, handler) {
 			removeSpy(this, arguments);
 			this.removeEventListener(target, secondEvent, handler);
 		}
@@ -38,7 +38,7 @@ unit.test('should work with the jQuery', function (assert) {
 	};
 
 	var event = mockEvent(customEventType, lowerEventType, hookSpy, hookSpy);
-	var removeEvent = addEvent(jQuery, event, customEventType); 
+	var removeEvent = addEvent(jQuery, event, customEventType);
 
 	$(input).on(customEventType, handler);
 	$(input).trigger(lowerEventType);
