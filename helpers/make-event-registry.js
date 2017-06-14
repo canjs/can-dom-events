@@ -70,24 +70,22 @@ EventRegistry.prototype.get = function (eventType) {
  * @return {function} The callback to remove the event from the registry.
 */
 EventRegistry.prototype.add = function (event, eventType) {
-	if (arguments.length === 1) {
-		return this.add(event, event.defaultEventType);
+	if (!event) {
+		throw new Error('An EventDefinition must be provided');
 	}
+	if (typeof event.addEventListener !== 'function') {
+		throw new TypeError('EventDefinition addEventListener must be a function');
+	}
+	if (typeof event.removeEventListener !== 'function') {
+		throw new TypeError('EventDefinition removeEventListener must be a function');
+	}
+
+	eventType = eventType || event.defaultEventType;
 	if (typeof eventType !== 'string') {
 		throw new TypeError('Event type must be a string, not ' + eventType);
 	}
-	if (!event) {
-		throw new Error('An event must be provided');
-	}
-	if (typeof event.addEventListener !== 'function') {
-		throw new TypeError('Event addEventListener must be a function');
-	}
-	if (typeof event.removeEventListener !== 'function') {
-		throw new TypeError('Event removeEventListener must be a function');
-	}
 
-	var existingEvent = this._registry[eventType];
-	if (existingEvent) {
+	if (this.has(eventType)) {
 		throw new Error('Event "' + eventType + '" is already registered');
 	}
 
