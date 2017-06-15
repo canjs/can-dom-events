@@ -28,3 +28,10 @@ unit.test('util.createEvent should merge the eventData object properties', funct
 	var event = util.createEvent(target, {keyCode: enterCode});
 	assert.equal(event.keyCode, enterCode);
 });
+
+unit.test('util.createEvent should use eventData.type as the eventType', function (assert) {
+	var target = document.createElement('input');
+	var eventType = 'foo';
+	var event = util.createEvent(target, {type: eventType});
+	assert.equal(event.type, eventType);
+});
