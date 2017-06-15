@@ -17,7 +17,7 @@ function createEvent (target, eventData, bubbles, cancelable) {
 		eventType = event.type;
 		for (var prop in eventData) {
 			if (event[prop] === undefined) {
-				event[prop] = event[prop];
+				event[prop] = eventData[prop];
 			}
 		}
 	}
