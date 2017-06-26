@@ -27,6 +27,17 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 		return domEvents.addEvent(customEvent, customEventType);
 	}
 
+	var registry = domEvents._compatRegistry;
+	if (!registry) {
+		registry = domEvents._compatRegistry = {};
+	}
+
+	if (registry[customEventType]) {
+		return function noopRemoveOverride () {};
+	}
+
+	registry[customEventType] = customEvent;
+
 	var newEvents = {
 		addEventListener: function () {
 			var data = removeDomContext(this, arguments);
@@ -67,6 +78,7 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 
 	return function removeOverride () {
 		isOverriding = false;
+		registry[customEventType] = null;
 		if (domEvents.addEventListener === addEventListener) {
 			domEvents.addEventListener = oldAddEventListener;
 		}
