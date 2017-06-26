@@ -169,3 +169,32 @@ unit.test('should work with the can-util/dom/events (no custom event type)', fun
 
 	removeEvent();
 });
+
+unit.test('should not override can-util/dom/events twice for the same eventType', function (assert) {
+	var done = assert.async();
+	var input = document.createElement('input');
+	var event = {
+		addEventListener: function (target, eventType, handler) {
+			target.addEventListener(eventType, handler);
+		},
+		removeEventListener: function (target, eventType, handler) {
+			target.removeEventListener(eventType, handler);
+		}
+	};
+
+	var eventsSpy = function () {};
+	var oldEvents = oldDomEventsMock(eventsSpy, eventsSpy);
+
+	var removeEvent1 = addEvent(oldEvents, event, 'foo');
+	var removeEvent2 = addEvent(oldEvents, event, 'foo');
+	var handler = function () {
+		removeEvent1();
+		removeEvent2();
+		assert.ok(true, 'This handler should only be called once');
+		done();
+	};
+
+	oldEvents.addEventListener.call(input, 'foo', handler);
+	domEvents.dispatch(input, 'foo');
+	oldEvents.removeEventListener.call(input, 'foo', handler);
+});

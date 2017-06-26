@@ -33,7 +33,7 @@ module.exports = function addEventCompat (domEvents, customEvent, customEventTyp
 	}
 
 	if (registry[customEventType]) {
-		return;
+		return function noopRemoveOverride () {};
 	}
 
 	registry[customEventType] = customEvent;
