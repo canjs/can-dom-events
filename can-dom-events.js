@@ -7,6 +7,7 @@ var makeEventRegistry = require('./helpers/make-event-registry');
 /**
  * @module {{}} can-dom-events
  * @parent can-infrastructure
+ * @package ./package.json
  * @description Dispatch and listen to DOM Events.
  * @group can-dom-events.static 0 static
  * @group can-dom-events.helpers 1 helpers
