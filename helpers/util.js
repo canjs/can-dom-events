@@ -1,6 +1,6 @@
 'use strict';
 
-var getCurrentDocument = require("can-util/dom/document/document");
+var getCurrentDocument = require("can-globals/document/document");
 var isBrowserWindow = require("can-util/js/is-browser-window/is-browser-window");
 
 function getTargetDocument (target) {
