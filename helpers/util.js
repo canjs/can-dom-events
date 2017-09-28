@@ -1,7 +1,7 @@
 'use strict';
 
 var getCurrentDocument = require("can-globals/document/document");
-var isBrowserWindow = require("can-util/js/is-browser-window/is-browser-window");
+var isBrowserWindow = require("can-globals/is-browser-window/is-browser-window");
 
 function getTargetDocument (target) {
 	return target.ownerDocument || getCurrentDocument();
