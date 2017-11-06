@@ -29,13 +29,17 @@ function createEvent (target, eventData, bubbles, cancelable) {
 }
 
 // We do not account for all EventTarget classes,
-// only EventTarget DOM nodes and the window.
+// only EventTarget DOM nodes, fragments, and the window.
 function isDomEventTarget (obj) {
 	if (!(obj && obj.nodeName)) {
 		return obj === window;
 	}
 	var nodeType = obj.nodeType;
-	return nodeType === Node.DOCUMENT_NODE || nodeType === Node.ELEMENT_NODE;
+	return (
+		nodeType === 1 || // Node.ELEMENT_NODE
+		nodeType === 9 || // Node.DOCUMENT_NODE
+		nodeType === 11 // Node.DOCUMENT_FRAGMENT_NODE
+	);
 }
 
 function addDomContext (context, args) {
