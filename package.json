@@ -44,6 +44,7 @@
     "jshint": "jshint ./*.js ./helpers/*.js --config",
     "lint": "fixpack && npm run jshint",
     "preversion": "npm test && npm run build",
+    "postversion": "git push --follow-tags",
     "test": "npm run detect-cycle && npm run lint && npm run testee",
     "testee": "testee test.html --browsers firefox"
   }
