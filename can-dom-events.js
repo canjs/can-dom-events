@@ -3,6 +3,7 @@
 var namespace = require('can-namespace');
 var util = require('./helpers/util');
 var makeEventRegistry = require('./helpers/make-event-registry');
+var makeDelegateEventTree = require('./helpers/-make-delegate-event-tree');
 
 /**
  * @module {{}} can-dom-events
@@ -94,6 +95,15 @@ var domEvents = {
 		return target.removeEventListener.apply(target, eventArgs);
 	},
 
+
+	addDelegateListener: function(target, eventType, selector, handler) {
+		domEvents._eventTree.add([target, eventType, selector, handler]);
+	},
+
+	removeDelegateListener: function(target, eventType, selector, handler) {
+		domEvents._eventTree.delete([target, eventType, selector, handler]);
+	},
+
 	/**
 	* @function can-dom-events.dispatch dispatch
 	*
@@ -122,6 +132,8 @@ var domEvents = {
 		return ret;
 	}
 };
+
+domEvents._eventTree = makeDelegateEventTree(domEvents);
 
 /**
  * @typedef {Object} can-dom-events.EventDefinition EventDefinition
