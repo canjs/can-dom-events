@@ -62,6 +62,94 @@ unit.test('domEvents.dispatch works', function (assert) {
 	input.removeEventListener(eventType, handler);
 });
 
+unit.test('domEvents.addDelegateListener works', function (assert) {
+	var done = assert.async();
+	var grandparent = document.createElement('div');
+	var parent = document.createElement('div');
+	var child = document.createElement('input');
+	
+	grandparent.appendChild(parent);
+	parent.appendChild(child);
+
+	domEvents.addDelegateListener(grandparent, 'click', 'input', function handler (event) {
+		domEvents.removeDelegateListener(grandparent, 'click', 'input', handler);
+
+		assert.equal(event.type, 'click', 'should be click event');
+		assert.equal(event.target, child, 'should have input as the event.target');
+
+		done();
+	});
+
+	domEvents.dispatch(child, 'click');
+});
+
+unit.test('domEvents.removeDelegateListener works', function (assert) {
+	assert.expect(2);
+	var grandparent = document.createElement('div');
+	var parent = document.createElement('div');
+	var child = document.createElement('input');
+	
+	grandparent.appendChild(parent);
+	parent.appendChild(child);
+
+	var handler = function handler (event) {
+		assert.equal(event.type, 'click', 'should be click event');
+		assert.equal(event.target, child, 'should have input as the event.target');
+	};
+
+	domEvents.addDelegateListener(grandparent, 'click', 'input', handler);
+
+	domEvents.dispatch(child, 'click');
+
+	domEvents.removeDelegateListener(grandparent, 'click', 'input', handler);
+
+	domEvents.dispatch(child, 'click');
+});
+
+unit.test("can call removeDelegateListener without having previously called addDelegateListener", function (assert) {
+	var ul = document.createElement("ul");
+	domEvents.removeDelegateListener(ul, "click", "li", function(){});
+	assert.ok(true, "Calling removeDelegateListener does not throw");
+});
+
+unit.test("delegate events: focus should work using capture phase", function (assert) {
+	var done = assert.async();
+	var parent = document.createElement('div');
+	var child = document.createElement('input');
+
+	parent.appendChild(child);
+	document.getElementById('qunit-fixture').appendChild(parent);
+
+	domEvents.addDelegateListener(parent, "focus", "input", function handler (event) {
+		domEvents.removeDelegateListener.call(parent, "focus", "input", handler);
+
+		assert.equal(event.type, 'focus', 'should be focus event');
+		assert.equal(event.target, child, 'should have input as event target');
+		done();
+	});
+
+	domEvents.dispatch(child, "focus", false);
+});
+
+unit.test("delegate events: blur should work using capture phase", function (assert) {
+	var done = assert.async();
+	var parent = document.createElement('div');
+	var child = document.createElement('input');
+
+	parent.appendChild(child);
+	document.getElementById('qunit-fixture').appendChild(parent);
+
+	domEvents.addDelegateListener(parent, "blur", "input", function handler (event) {
+		domEvents.removeDelegateListener.call(parent, "blur", "input", handler);
+
+		assert.equal(event.type, 'blur', 'should be blur event');
+		assert.equal(event.target, child, 'should have input as event target');
+		done();
+	});
+
+	domEvents.dispatch(child, "blur", false);
+});
+
 require('./helpers/make-event-registry-test');
 require('./helpers/add-event-compat-test');
 require('./helpers/add-event-jquery-test');
