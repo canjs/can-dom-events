@@ -67,7 +67,7 @@ unit.test('domEvents.addDelegateListener works', function (assert) {
 	var grandparent = document.createElement('div');
 	var parent = document.createElement('div');
 	var child = document.createElement('input');
-	
+
 	grandparent.appendChild(parent);
 	parent.appendChild(child);
 
@@ -88,7 +88,7 @@ unit.test('domEvents.removeDelegateListener works', function (assert) {
 	var grandparent = document.createElement('div');
 	var parent = document.createElement('div');
 	var child = document.createElement('input');
-	
+
 	grandparent.appendChild(parent);
 	parent.appendChild(child);
 
@@ -148,6 +148,16 @@ unit.test("delegate events: blur should work using capture phase", function (ass
 	});
 
 	domEvents.dispatch(child, "blur", false);
+});
+
+unit.test('domEvents.addDelegateListener handles document correctly', function (assert) {
+	var html = document.querySelector('html');
+	var handler = function handler() {};
+
+	domEvents.addDelegateListener(html, 'click', 'input', handler);
+	domEvents.dispatch(html, 'click');
+	domEvents.removeDelegateListener(html, 'click', 'input', handler);
+	assert.ok(true, 'works');
 });
 
 require('./helpers/make-event-registry-test');

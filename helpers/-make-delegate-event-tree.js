@@ -14,18 +14,23 @@ function makeDelegator (domEvents) {
 		this.events = {}; // {[eventType: string]: Array<(event) -> void>}
 		this.delegated = {}; // {[eventType: string]: (event) -> void}
 	};
-	
+
 	canReflect.assignSymbols( Delegator.prototype, {
 		"can.setKeyValue": function(eventType, handlersBySelector){
 			var handler = this.delegated[eventType] = function(ev){
 				canReflect.each(handlersBySelector, function(handlers, selector){
 					var cur = ev.target;
 					do {
-						if (cur.matches(selector)) {
+						// document does not implement `.matches` but documentElement does
+						var el = cur === document ? document.documentElement : cur;
+						if (el.matches(selector)) {
 							handlers.forEach(function(handler){
-								handler.call(cur, ev);
+								handler.call(el, ev);
 							});
 						}
+						// since `el` points to `documentElement` when `cur` === document,
+						// we need to continue using `cur` as the loop pointer, otherwhise
+						// it will never end as documentElement.parentNode === document
 						cur = cur.parentNode;
 					} while (cur && cur !== ev.currentTarget);
 				});
