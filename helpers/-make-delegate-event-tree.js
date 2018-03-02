@@ -23,7 +23,9 @@ function makeDelegator (domEvents) {
 					do {
 						// document does not implement `.matches` but documentElement does
 						var el = cur === document ? document.documentElement : cur;
-						if (el.matches(selector)) {
+						var matches = el.matches || el.msMatchesSelector;
+
+						if (matches.call(el, selector)) {
 							handlers.forEach(function(handler){
 								handler.call(el, ev);
 							});
