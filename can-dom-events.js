@@ -5,45 +5,23 @@ var util = require('./helpers/util');
 var makeEventRegistry = require('./helpers/make-event-registry');
 var makeDelegateEventTree = require('./helpers/-make-delegate-event-tree');
 
-/**
- * @module {{}} can-dom-events
- * @parent can-dom-utilities
- * @collection can-infrastructure
- * @package ./package.json
- * @description Dispatch and listen to DOM Events.
- * @group can-dom-events.static 0 static
- * @group can-dom-events.helpers 1 helpers
- * @group can-dom-events.types 2 types
- * @signature `domEvents`
- *
- * @body
- *
- * ```js
- * var domEvents = require("can-dom-events");
- * var input = document.createElement('input');
- *
- * function onChange(event) {
- * 	console.log('Input value changed to:', event.target.value);
- * }
- *
- * domEvents.addEventListener(input, 'change', onChange);
- *
- * domEvents.dispatch(input, 'change'); // calls onChange
- *
- * domEvents.removeEventListener(input, 'change', onChange);
- * ```
- */
+
 var domEvents = {
 	_eventRegistry: makeEventRegistry(),
 
 	/**
 	* @function can-dom-events.addEvent addEvent
+	* @parent can-dom-events.static
 	*
 	* Add a custom event to the global event registry.
 	*
 	* @signature `addEvent( event [, eventType ] )`
-	* @parent can-dom-events.static
-	* @param {EventDefinition} event The custom event definition.
+	*
+	* ```js
+	* var removeReturnEvent = domEvents.addEvent(enterEvent, "return");
+	* ```
+	*
+	* @param {can-dom-events/EventDefinition} event The custom event definition.
 	* @param {String} eventType The event type to associated with the custom event.
 	* @return {function} The callback to remove the custom event from the registry.
 	*/
@@ -60,7 +38,8 @@ var domEvents = {
 	* @parent can-dom-events.static
 	* @param {DomEventTarget} target The object to which to add the listener.
 	* @param {String} eventType The event type with which to register.
-	* @param {*} eventArgs The arguments which configure the associated event's behavior.
+	* @param {*} eventArgs The arguments which configure the associated event's behavior. This is usually a
+	* function event handler.
 	*/
 	addEventListener: function(target, eventType) {
 		var hasCustomEvent = domEvents._eventRegistry.has(eventType);
@@ -82,7 +61,8 @@ var domEvents = {
 	* @parent can-dom-events.static
 	* @param {DomEventTarget} target The object to which to add the listener.
 	* @param {String} eventType The event type with which to unregister.
-	* @param {*} eventArgs The arguments which configure the associated event's behavior.
+	* @param {*} eventArgs The arguments which configure the associated event's behavior. This is usually a
+	* function event handler.
 	*/
 	removeEventListener: function(target, eventType) {
 		var hasCustomEvent = domEvents._eventRegistry.has(eventType);
@@ -95,11 +75,51 @@ var domEvents = {
 		return target.removeEventListener.apply(target, eventArgs);
 	},
 
-
-	addDelegateListener: function(target, eventType, selector, handler) {
-		domEvents._eventTree.add([target, eventType, selector, handler]);
+	/**
+	* @function can-dom-events.addDelegateListener addDelegateListener
+	*
+	* Attach a handler for an event for all elements that match the selector,
+	* now or in the future, based on a root element.
+	*
+	* @signature `addDelegateListener( target, eventType, selector, handler )`
+	*
+	* ```js
+	* // Prevents all anchor elements from changing the page
+	* domEvents.addDelegateListener(document.body,"click", "a", function(event){
+	*   event.preventDefault();
+	* })
+	* ```
+	* @parent can-dom-events.static
+	* @param {DomEventTarget} root The html element to listen to events that match selector within.
+	* @param {String} eventType The event name to listen to.
+	* @param {String} selector A selector to filter the elements that trigger the event.
+	* @param {function} handler A function to execute at the time the event is triggered.
+	*/
+	addDelegateListener: function(root, eventType, selector, handler) {
+		domEvents._eventTree.add([root, eventType, selector, handler]);
 	},
-
+	/**
+	* @function can-dom-events.removeDelegateListener removeDelegateListener
+	*
+	* Remove a handler for an event for all elements that match the selector.
+	*
+	* @signature `removeDelegateListener( target, eventType, selector, handler )`
+	*
+	* ```js
+	* // Prevents all anchor elements from changing the page
+	* function handler(event) {
+	*   event.preventDefault();
+	* }
+	* domEvents.addDelegateListener(document.body,"click", "a", handler);
+	*
+	* domEvents.removeDelegateListener(document.body,"click", "a", handler);
+	* ```
+	* @parent can-dom-events.static
+	* @param {DomEventTarget} root The html element to listen to events that match selector within.
+	* @param {String} eventType The event name to listen to.
+	* @param {String} selector A selector to filter the elements that trigger the event.
+	* @param {function} handler A function that was previously passed to `addDelegateListener`.
+	*/
 	removeDelegateListener: function(target, eventType, selector, handler) {
 		domEvents._eventTree.delete([target, eventType, selector, handler]);
 	},
@@ -135,37 +155,8 @@ var domEvents = {
 
 domEvents._eventTree = makeDelegateEventTree(domEvents);
 
-/**
- * @typedef {Object} can-dom-events.EventDefinition EventDefinition
- * @description Definition of a custom event that may be added to an event registry.
- * @parent can-dom-events.types
- * @type {Object}
- *     @option {String} [defaultEventType]
- *     The default event type of the event.
- *
- *     @option {function} [addEventListener]
- *     The function to add the listener to the target.
- *         @param {DomEventTarget} target The target to which to add the listener.
- *         @param {String} eventType The event type which should be used to register the listener.
- *         @param {*} eventArgs The arguments should to configure the listener behavior.
- *
- *     @option {function} [removeEventListener]
- *     The function to remove the listener from the target.
- *         @param {DomEventTarget} target The target to which to add the listener.
- *         @param {String} eventType The event type which should be used to register the listener.
- *         @param {*} eventArgs The arguments should to configure the listener behavior.
- */
 
- /**
- * @typedef {Object} can-dom-events.DomEventTarget DomEventTarget
- * @description
- * An object which can have DOM Events registered on it.
- * This is a Window, Document, or HTMLElement.
- * @parent can-dom-events.types
- * @signature `Window|Document|HTMLElement`
- * @type {Window}
- * @type {Document}
- * @type {HTMLElement}
- */
+
+
 
 module.exports = namespace.domEvents = domEvents;
