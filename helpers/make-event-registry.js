@@ -8,9 +8,10 @@ function EventRegistry () {
  * @module can-dom-events/helpers/make-event-registry
  * @parent can-dom-events.helpers
  * @description Create an event registry.
- * @group make-event-registry.registry 0 EventRegistry
  * @signature `makeEventRegistry()`
- *
+ *   @return {can-dom-events/EventRegistry}
+ * @hide
+ * 
  * @body
  *
  * ```js
@@ -36,7 +37,7 @@ module.exports = function makeEventRegistry () {
  * Check whether an event type has already been registered.
  *
  * @signature `eventRegistry.has( eventType )`
- * @parent make-event-registry.registry
+ * @parent can-dom-events/EventRegistry
  * @param {String} eventType The event type for which to check.
  * @return {Boolean} Whether the event type is registered.
 */
@@ -50,7 +51,7 @@ EventRegistry.prototype.has = function (eventType) {
  * Retrieve an event type which has already been registered.
  *
  * @signature `eventRegistry.get( eventType )`
- * @parent make-event-registry.registry
+ * @parent can-dom-events/EventRegistry
  * @param {String} eventType The event type for which to retrieve.
  * @return {EventDefinition} The registered event definition, or undefined if unregistered.
 */
@@ -64,7 +65,7 @@ EventRegistry.prototype.get = function (eventType) {
  * Add an event to the registry.
  *
  * @signature `eventRegistry.add( event [, eventType ] )`
- * @parent make-event-registry.registry
+ * @parent can-dom-events/EventRegistry
  * @param {EventDefinition} event The event definition to register.
  * @param {String} eventType The event type with which to register the event.
  * @return {function} The callback to remove the event from the registry.
