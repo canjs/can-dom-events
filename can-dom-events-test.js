@@ -163,4 +163,5 @@ unit.test('domEvents.addDelegateListener handles document correctly', function (
 require('./helpers/make-event-registry-test');
 require('./helpers/add-event-compat-test');
 require('./helpers/add-event-jquery-test');
+require('./helpers/add-jquery-events-test');
 require('./helpers/util-test');
