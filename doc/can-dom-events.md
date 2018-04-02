@@ -4,6 +4,7 @@
 @package ../package.json
 @group can-dom-events.static 0 static
 @group can-dom-events.types 1 types
+@group can-dom-events.helpers 2 helpers
 
 @description Listen to DOM events and special events, and register
 special events.
