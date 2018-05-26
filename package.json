@@ -11,7 +11,7 @@
     "url": "https://github.com/canjs/can-dom-events/issues"
   },
   "dependencies": {
-    "can-globals": "<2.0.0",
+    "can-globals": "1.1.0",
     "can-key-tree": "^1.0.0",
     "can-namespace": "^1.0.0",
     "can-reflect": "^1.11.1"
