@@ -1,3 +1,4 @@
+"use strict";
 var KeyTree = require('can-key-tree');
 var canReflect = require('can-reflect');
 
