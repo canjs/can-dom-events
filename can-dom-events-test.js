@@ -10,13 +10,19 @@ unit.test('domEvents.addEventListener works', function (assert) {
 
 	var input = document.createElement('input');
 	var eventType = 'click';
+	var event;
+
 	var handler = function () {
 		assert.ok(true, 'event handler should be called');
 	};
 
-	domEvents.addEventListener(input, eventType, handler);
-
-	var event = new Event(eventType);
+	domEvents.addEventListener(input, eventType, handler, false);
+	if (typeof Event === "function") {
+		event = new Event(eventType);
+	} else {
+		event = document.createEvent('Event');
+		event.initEvent(eventType, false, true);
+	}
 	input.dispatchEvent(event);
 
 	domEvents.removeEventListener(input, eventType, handler);
@@ -29,18 +35,29 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 
 	var input = document.createElement('input');
 	var eventType = 'click';
+	var event, event2;
 	var handler = function () {
 		assert.ok(true, 'event handler should be called');
 	};
 
 	domEvents.addEventListener(input, eventType, handler);
 
-	var event = new Event(eventType);
+	if (typeof Event === "function") {
+		event = new Event(eventType);
+	} else {
+		event = document.createEvent('Event');
+		event.initEvent(eventType, true, true);
+	}
 	input.dispatchEvent(event);
 
 	domEvents.removeEventListener(input, eventType, handler);
 
-	var event2 = new Event(eventType);
+	if (typeof Event === "function") {
+		var event2 = new Event(eventType);
+	} else {
+		event2 = document.createEvent('Event');
+		event2.initEvent(eventType, true, true);
+	}
 	input.dispatchEvent(event2);
 });
 
