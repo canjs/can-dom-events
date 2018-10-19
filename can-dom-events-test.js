@@ -53,7 +53,7 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	domEvents.removeEventListener(input, eventType, handler);
 
 	if (typeof Event === "function") {
-		var event2 = new Event(eventType);
+		event2 = new Event(eventType);
 	} else {
 		event2 = document.createEvent('Event');
 		event2.initEvent(eventType, true, true);
