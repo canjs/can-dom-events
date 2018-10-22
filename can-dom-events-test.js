@@ -11,6 +11,8 @@ unit.test('domEvents.addEventListener works', function (assert) {
 	var input = document.createElement('input');
 	var eventType = 'click';
 	var event;
+	var qf = document.querySelector('#qunit-fixture');
+	qf.appendChild(input);
 
 	var handler = function () {
 		assert.ok(true, 'event handler should be called');
@@ -20,8 +22,6 @@ unit.test('domEvents.addEventListener works', function (assert) {
 	if (typeof Event === "function") {
 		event = new Event(eventType);
 	} else {
-		var qf = document.querySelector('#qunit-fixture');
-		qf.appendChild(input);
 		event = document.createEvent('Event');
 		event.initEvent(eventType, true, false);
 	}
@@ -38,6 +38,7 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	var eventType = 'click';
 	var event, event2;
 	var qf = document.querySelector('#qunit-fixture');
+	qf.appendChild(input);
 	var handler = function () {
 		assert.ok(true, 'event handler should be called');
 	};
@@ -47,7 +48,6 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	if (typeof Event === "function") {
 		event = new Event(eventType);
 	} else {
-		qf.appendChild(input);
 		event = document.createEvent('Event');
 		event.initEvent(eventType, true, true);
 	}
@@ -58,9 +58,6 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	if (typeof Event === "function") {
 		event2 = new Event(eventType);
 	} else {
-		if (!qf.contains(input)) {
-			qf.appendChild(input);
-		}
 		event2 = document.createEvent('Event');
 		event2.initEvent(eventType, true, true);
 	}
