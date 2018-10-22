@@ -16,15 +16,16 @@ unit.test('domEvents.addEventListener works', function (assert) {
 		assert.ok(true, 'event handler should be called');
 	};
 
-	domEvents.addEventListener(input, eventType, handler, false);
+	domEvents.addEventListener(input, eventType, handler);
 	if (typeof Event === "function") {
 		event = new Event(eventType);
 	} else {
+		var qf = document.querySelector('#qunit-fixture');
+		qf.appendChild(input);
 		event = document.createEvent('Event');
-		event.initEvent(eventType, false, true);
+		event.initEvent(eventType, true, false);
 	}
 	input.dispatchEvent(event);
-
 	domEvents.removeEventListener(input, eventType, handler);
 });
 
@@ -36,6 +37,7 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	var input = document.createElement('input');
 	var eventType = 'click';
 	var event, event2;
+	var qf = document.querySelector('#qunit-fixture');
 	var handler = function () {
 		assert.ok(true, 'event handler should be called');
 	};
@@ -45,6 +47,7 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	if (typeof Event === "function") {
 		event = new Event(eventType);
 	} else {
+		qf.appendChild(input);
 		event = document.createEvent('Event');
 		event.initEvent(eventType, true, true);
 	}
@@ -55,6 +58,9 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	if (typeof Event === "function") {
 		event2 = new Event(eventType);
 	} else {
+		if (!qf.contains(input)) {
+			qf.appendChild(input);
+		}
 		event2 = document.createEvent('Event');
 		event2.initEvent(eventType, true, true);
 	}
@@ -73,6 +79,11 @@ unit.test('domEvents.dispatch works', function (assert) {
 	};
 
 	input.addEventListener(eventType, handler);
+
+	if (typeof Event !== "function") {
+		var qf = document.querySelector('#qunit-fixture');
+		qf.appendChild(input);
+	}
 
 	domEvents.dispatch(input, eventType);
 
