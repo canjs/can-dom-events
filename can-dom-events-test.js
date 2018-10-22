@@ -72,15 +72,13 @@ unit.test('domEvents.dispatch works', function (assert) {
 	var input = document.createElement('input');
 	var eventType = 'click';
 	var qf = document.querySelector('#qunit-fixture');
+	qf.appendChild(input);
 	var handler = function () {
 		assert.ok(true, 'event handler should be called');
 	};
 
 	input.addEventListener(eventType, handler);
 
-	if (typeof Event !== "function") {
-		qf.appendChild(input);
-	}
 
 	domEvents.dispatch(input, eventType);
 
