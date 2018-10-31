@@ -26,7 +26,9 @@ function makeDelegator (domEvents) {
 						var el = cur === document ? document.documentElement : cur;
 						var matches = el.matches || el.msMatchesSelector;
 
-						if (matches.call(el, selector)) {
+						// Text and comment nodes may be included in mutation event targets
+						//  but will never match selectors (and do not implement matches)
+						if (matches && matches.call(el, selector)) {
 							handlers.forEach(function(handler){
 								handler.call(el, ev);
 							});
