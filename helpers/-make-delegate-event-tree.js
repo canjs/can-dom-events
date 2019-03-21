@@ -21,7 +21,7 @@ function makeDelegator (domEvents) {
 			var handler = this.delegated[eventType] = function(ev){
 				var cur = ev.target;
 				var propagate = true;
-				ev.stopPropagation = function() {
+				ev.stopPropagation = ev.stopImmediatePropagation = function() {
 					propagate = false;
 				};
 				do {
