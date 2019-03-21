@@ -20,6 +20,10 @@ function makeDelegator (domEvents) {
 		"can.setKeyValue": function(eventType, handlersBySelector){
 			var handler = this.delegated[eventType] = function(ev){
 				var cur = ev.target;
+				var propagate = true;
+				ev.stopPropagation = function() {
+					propagate = false;
+				};
 				do {
 					// document does not implement `.matches` but documentElement does
 					var el = cur === document ? document.documentElement : cur;
@@ -38,7 +42,7 @@ function makeDelegator (domEvents) {
 					// we need to continue using `cur` as the loop pointer, otherwhise
 					// it will never end as documentElement.parentNode === document
 					cur = cur.parentNode;
-				} while (cur && cur !== ev.currentTarget);
+				} while ((cur && cur !== ev.currentTarget) && propagate);
 			};
 			this.events[eventType] = handlersBySelector;
 			domEvents.addEventListener(this.element, eventType, handler, useCapture(eventType));
