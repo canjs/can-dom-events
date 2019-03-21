@@ -188,3 +188,31 @@ require('./helpers/add-event-compat-test');
 require('./helpers/add-event-jquery-test');
 require('./helpers/add-jquery-events-test');
 require('./helpers/util-test');
+
+unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', function (assert) {
+	var done = assert.async();
+	var grandparent = document.createElement('div');
+	var parent = document.createElement('p');
+	var child = document.createElement('input');
+
+	grandparent.appendChild(parent);
+	parent.appendChild(child);
+
+	var handlerCallCount = 0;
+
+	var paragraphClickHandler = function paragraphClickHandler() {
+		domEvents.removeDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
+		assert.equal(++handlerCallCount, 2, 'outer handler called second');
+	};
+
+	var inputClickHandler = function inputClickHandler() {
+		domEvents.removeDelegateListener(grandparent, 'click', 'input', inputClickHandler);
+		assert.equal(++handlerCallCount, 1, 'inner handler called first');
+	};
+
+	domEvents.addDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
+	domEvents.addDelegateListener(grandparent, 'click', 'input', inputClickHandler);
+
+	domEvents.dispatch(child, 'click');
+	done();
+});
