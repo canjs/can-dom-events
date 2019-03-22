@@ -19,13 +19,17 @@ function makeDelegator (domEvents) {
 	canReflect.assignSymbols( Delegator.prototype, {
 		"can.setKeyValue": function(eventType, handlersBySelector){
 			var handler = this.delegated[eventType] = function(ev){
-				canReflect.each(handlersBySelector, function(handlers, selector){
-					var cur = ev.target;
-					do {
-						// document does not implement `.matches` but documentElement does
-						var el = cur === document ? document.documentElement : cur;
-						var matches = el.matches || el.msMatchesSelector;
+				var cur = ev.target;
+				var propagate = true;
+				ev.stopPropagation = ev.stopImmediatePropagation = function() {
+					propagate = false;
+				};
+				do {
+					// document does not implement `.matches` but documentElement does
+					var el = cur === document ? document.documentElement : cur;
+					var matches = el.matches || el.msMatchesSelector;
 
+					canReflect.each(handlersBySelector, function(handlers, selector){
 						// Text and comment nodes may be included in mutation event targets
 						//  but will never match selectors (and do not implement matches)
 						if (matches && matches.call(el, selector)) {
@@ -33,12 +37,12 @@ function makeDelegator (domEvents) {
 								handler.call(el, ev);
 							});
 						}
-						// since `el` points to `documentElement` when `cur` === document,
-						// we need to continue using `cur` as the loop pointer, otherwhise
-						// it will never end as documentElement.parentNode === document
-						cur = cur.parentNode;
-					} while (cur && cur !== ev.currentTarget);
-				});
+					});
+					// since `el` points to `documentElement` when `cur` === document,
+					// we need to continue using `cur` as the loop pointer, otherwhise
+					// it will never end as documentElement.parentNode === document
+					cur = cur.parentNode;
+				} while ((cur && cur !== ev.currentTarget) && propagate);
 			};
 			this.events[eventType] = handlersBySelector;
 			domEvents.addEventListener(this.element, eventType, handler, useCapture(eventType));
