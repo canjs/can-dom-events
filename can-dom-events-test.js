@@ -229,7 +229,7 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 
 		var paragraphClickHandler = function paragraphClickHandler() {
 			domEvents.removeDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
-			assert.ok(false, 'ev.stopPropagation works');
+			assert.ok(false, stopMethod + ' works');
 		};
 
 		var inputClickHandler = function inputClickHandler(event) {
@@ -240,6 +240,34 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 
 		domEvents.addDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
 		domEvents.addDelegateListener(grandparent, 'click', 'input', inputClickHandler);
+
+		domEvents.dispatch(child, 'click');
+		done();
+	});
+
+	unit.test('domEvents.addDelegateListener should call the actual ev.' + stopMethod + ' (#62)', function (assert) {
+		var done = assert.async();
+		var parent = document.createElement('p');
+		var child = document.createElement('input');
+
+		parent.appendChild(child);
+
+		var qf = document.querySelector('#qunit-fixture');
+		qf.appendChild(parent);
+
+		var delegatedClickHandler = function delegatedClickHandler(event) {
+			event[stopMethod]();
+			domEvents.removeDelegateListener(parent, 'click', 'input', delegatedClickHandler);
+			assert.ok(true, 'inner-most click handler called first');
+		};
+
+		var documentClickHandler = function documentClickHandler() {
+			domEvents.removeEventListener(document, 'click', documentClickHandler);
+			assert.ok(false, stopMethod + ' works');
+		};
+
+		domEvents.addDelegateListener(parent, 'click', 'input', delegatedClickHandler);
+		domEvents.addEventListener(document, 'click', documentClickHandler);
 
 		domEvents.dispatch(child, 'click');
 		done();
