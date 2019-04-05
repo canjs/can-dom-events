@@ -183,12 +183,6 @@ unit.test('domEvents.addDelegateListener handles document correctly', function (
 	assert.ok(true, 'works');
 });
 
-require('./helpers/make-event-registry-test');
-require('./helpers/add-event-compat-test');
-require('./helpers/add-event-jquery-test');
-require('./helpers/add-jquery-events-test');
-require('./helpers/util-test');
-
 unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', function (assert) {
 	var done = assert.async();
 	var grandparent = document.createElement('div');
@@ -201,12 +195,10 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 	var handlerCallCount = 0;
 
 	var paragraphClickHandler = function paragraphClickHandler() {
-		domEvents.removeDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
 		assert.equal(++handlerCallCount, 2, 'outer handler called second');
 	};
 
 	var inputClickHandler = function inputClickHandler() {
-		domEvents.removeDelegateListener(grandparent, 'click', 'input', inputClickHandler);
 		assert.equal(++handlerCallCount, 1, 'inner handler called first');
 	};
 
@@ -214,6 +206,10 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 	domEvents.addDelegateListener(grandparent, 'click', 'input', inputClickHandler);
 
 	domEvents.dispatch(child, 'click');
+
+	domEvents.removeDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
+	domEvents.removeDelegateListener(grandparent, 'click', 'input', inputClickHandler);
+
 	done();
 });
 
@@ -228,13 +224,11 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 		parent.appendChild(child);
 
 		var paragraphClickHandler = function paragraphClickHandler() {
-			domEvents.removeDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
 			assert.ok(false, stopMethod + ' works');
 		};
 
 		var inputClickHandler = function inputClickHandler(event) {
 			event[stopMethod]();
-			domEvents.removeDelegateListener(grandparent, 'click', 'input', inputClickHandler);
 			assert.ok(true, 'inner-most click handler called first');
 		};
 
@@ -242,6 +236,10 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 		domEvents.addDelegateListener(grandparent, 'click', 'input', inputClickHandler);
 
 		domEvents.dispatch(child, 'click');
+
+		domEvents.removeDelegateListener(grandparent, 'click', 'p', paragraphClickHandler);
+		domEvents.removeDelegateListener(grandparent, 'click', 'input', inputClickHandler);
+
 		done();
 	});
 
@@ -257,12 +255,10 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 
 		var delegatedClickHandler = function delegatedClickHandler(event) {
 			event[stopMethod]();
-			domEvents.removeDelegateListener(parent, 'click', 'input', delegatedClickHandler);
 			assert.ok(true, 'inner-most click handler called first');
 		};
 
 		var documentClickHandler = function documentClickHandler() {
-			domEvents.removeEventListener(document, 'click', documentClickHandler);
 			assert.ok(false, stopMethod + ' works');
 		};
 
@@ -270,6 +266,16 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 		domEvents.addEventListener(document, 'click', documentClickHandler);
 
 		domEvents.dispatch(child, 'click');
+
+		domEvents.removeDelegateListener(parent, 'click', 'input', delegatedClickHandler);
+		domEvents.removeEventListener(document, 'click', documentClickHandler);
+
 		done();
 	});
 });
+
+require('./helpers/make-event-registry-test');
+require('./helpers/add-event-compat-test');
+require('./helpers/add-event-jquery-test');
+require('./helpers/add-jquery-events-test');
+require('./helpers/util-test');
