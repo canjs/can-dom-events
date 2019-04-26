@@ -1,9 +1,9 @@
-var unit = require('steal-qunit');
+var QUnit = require('steal-qunit');
 var domEvents = require('./can-dom-events');
 
-unit.module('can-dom-events');
+QUnit.module('can-dom-events');
 
-unit.test('domEvents.addEventListener works', function (assert) {
+QUnit.test('domEvents.addEventListener works', function (assert) {
 	// We check that our handler gets called if we add it through domEvents.
 	// NOTE: the event is not triggered via domEvents.dispatch to isolate this test.
 	assert.expect(1);
@@ -29,7 +29,7 @@ unit.test('domEvents.addEventListener works', function (assert) {
 	domEvents.removeEventListener(input, eventType, handler);
 });
 
-unit.test('domEvents.removeEventListener works', function (assert) {
+QUnit.test('domEvents.removeEventListener works', function (assert) {
 	// We check that our handler gets called if we add/remove it through domEvents.
 	// NOTE: the event is not triggered via domEvents.dispatch to isolate this test.
 	assert.expect(1);
@@ -64,7 +64,7 @@ unit.test('domEvents.removeEventListener works', function (assert) {
 	input.dispatchEvent(event2);
 });
 
-unit.test('domEvents.dispatch works', function (assert) {
+QUnit.test('domEvents.dispatch works', function (assert) {
 	// NOTE: dispatching should work no matter how a listener was add.
 	// So we use the native addEventListener to isolate the dispatch.
 	assert.expect(1);
@@ -85,7 +85,7 @@ unit.test('domEvents.dispatch works', function (assert) {
 	input.removeEventListener(eventType, handler);
 });
 
-unit.test('domEvents.addDelegateListener works', function (assert) {
+QUnit.test('domEvents.addDelegateListener works', function (assert) {
 	var done = assert.async();
 	var grandparent = document.createElement('div');
 	var parent = document.createElement('div');
@@ -106,7 +106,7 @@ unit.test('domEvents.addDelegateListener works', function (assert) {
 	domEvents.dispatch(child, 'click');
 });
 
-unit.test('domEvents.removeDelegateListener works', function (assert) {
+QUnit.test('domEvents.removeDelegateListener works', function (assert) {
 	assert.expect(2);
 	var grandparent = document.createElement('div');
 	var parent = document.createElement('div');
@@ -129,13 +129,13 @@ unit.test('domEvents.removeDelegateListener works', function (assert) {
 	domEvents.dispatch(child, 'click');
 });
 
-unit.test("can call removeDelegateListener without having previously called addDelegateListener", function (assert) {
+QUnit.test("can call removeDelegateListener without having previously called addDelegateListener", function (assert) {
 	var ul = document.createElement("ul");
 	domEvents.removeDelegateListener(ul, "click", "li", function(){});
 	assert.ok(true, "Calling removeDelegateListener does not throw");
 });
 
-unit.test("delegate events: focus should work using capture phase", function (assert) {
+QUnit.test("delegate events: focus should work using capture phase", function (assert) {
 	var done = assert.async();
 	var parent = document.createElement('div');
 	var child = document.createElement('input');
@@ -154,7 +154,7 @@ unit.test("delegate events: focus should work using capture phase", function (as
 	domEvents.dispatch(child, "focus", false);
 });
 
-unit.test("delegate events: blur should work using capture phase", function (assert) {
+QUnit.test("delegate events: blur should work using capture phase", function (assert) {
 	var done = assert.async();
 	var parent = document.createElement('div');
 	var child = document.createElement('input');
@@ -173,7 +173,7 @@ unit.test("delegate events: blur should work using capture phase", function (ass
 	domEvents.dispatch(child, "blur", false);
 });
 
-unit.test('domEvents.addDelegateListener handles document correctly', function (assert) {
+QUnit.test('domEvents.addDelegateListener handles document correctly', function (assert) {
 	var html = document.querySelector('html');
 	var handler = function handler() {};
 
@@ -183,7 +183,7 @@ unit.test('domEvents.addDelegateListener handles document correctly', function (
 	assert.ok(true, 'works');
 });
 
-unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', function (assert) {
+QUnit.test('domEvents.addDelegateListener call inner-most handler first (#62)', function (assert) {
 	var done = assert.async();
 	var grandparent = document.createElement('div');
 	var parent = document.createElement('p');
@@ -214,7 +214,7 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 });
 
 ['stopPropagation', 'stopImmediatePropagation'].forEach(function(stopMethod) {
-	unit.test('domEvents.addDelegateListener should have a working ev.' + stopMethod + ' (#62)', function (assert) {
+	QUnit.test('domEvents.addDelegateListener should have a working ev.' + stopMethod + ' (#62)', function (assert) {
 		var done = assert.async();
 		var grandparent = document.createElement('div');
 		var parent = document.createElement('p');
@@ -243,7 +243,7 @@ unit.test('domEvents.addDelegateListener call inner-most handler first (#62)', f
 		done();
 	});
 
-	unit.test('domEvents.addDelegateListener should call the actual ev.' + stopMethod + ' (#62)', function (assert) {
+	QUnit.test('domEvents.addDelegateListener should call the actual ev.' + stopMethod + ' (#62)', function (assert) {
 		var done = assert.async();
 		var parent = document.createElement('p');
 		var child = document.createElement('input');
