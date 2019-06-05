@@ -55,11 +55,11 @@ var domEvents = {
 	/**
 	* @function can-dom-events.removeEventListener removeEventListener
 	*
-	* Remove an event listener for eventType to the target.
+	* Remove an event listener for eventType from the target.
 	*
 	* @signature `removeEventListener( target, eventType, ...eventArgs )`
 	* @parent can-dom-events.static
-	* @param {DomEventTarget} target The object to which to add the listener.
+	* @param {DomEventTarget} target The object from which to remove the listener.
 	* @param {String} eventType The event type with which to unregister.
 	* @param {*} eventArgs The arguments which configure the associated event's behavior. This is usually a
 	* function event handler.
@@ -131,7 +131,7 @@ var domEvents = {
 	*
 	* @signature `dispatch( target, eventData [, bubbles ][, cancelable ] )`
 	* @parent can-dom-events.static
-	* @param {DomEventTarget} target The object to which to add the listener.
+	* @param {DomEventTarget} target The object on which to dispatch the event.
 	* @param {Object | String} eventData The data to be assigned to the event. If it is a string, that will be the event type.
 	* @param {Boolean} bubbles Whether the event should bubble; defaults to true.
 	* @param {Boolean} cancelable Whether the event can be cancelled; defaults to false.
