@@ -66,3 +66,21 @@ unit.test('get should return the register event', function (assert) {
 	remove();
 	assert.equal(registry.get(eventType), undefined, 'empty registry should not have the event');
 });
+
+unit.test('checks if custom event is already registered (#72)', function (assert) {
+	var eventType = 'boi';
+	var exampleEvent = {
+		defaultEventType: eventType,
+		addEventListener: function () {},
+		removeEventListener: function () {}
+	};
+
+	var registry = makeEventRegistry();
+	assert.equal(registry.has(eventType), false, 'initial registry should not have the event');
+
+	registry.add(exampleEvent, eventType);
+	assert.equal(registry.has(eventType), true, 'updated registry should have the event');
+
+	// In production, an Error is thrown
+	assert.equal(registry.add(exampleEvent, eventType), undefined, 'returns undefined if an event is already registered in development');
+});
