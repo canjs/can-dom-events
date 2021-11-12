@@ -90,10 +90,8 @@ EventRegistry.prototype.add = function (event, eventType) {
 
 	if (this.has(eventType)) {
 		if (process.env.NODE_ENV !== 'production') {
-			if (this.has(eventType)) {
 				dev.warn('Event "' + eventType + '" is already registered');
 				return;
-			}
 		}
 
 		throw new Error('Event "' + eventType + '" is already registered');
