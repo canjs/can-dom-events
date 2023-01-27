@@ -82,5 +82,13 @@ unit.test('checks if custom event is already registered (#72)', function (assert
 	assert.equal(registry.has(eventType), true, 'updated registry should have the event');
 
 	// In production, an Error is thrown
-	assert.equal(registry.add(exampleEvent, eventType), undefined, 'returns undefined if an event is already registered in development');
+	if(process.env.NODE_ENV === "production") {
+		assert.throws(
+			function() { registry.add(exampleEvent, eventType); },
+			function(err) { return err.message === 'Event "' + eventType + '" is already registered'; },
+			'throws error if an event is already registered in production'
+		);
+	} else {
+		assert.equal(registry.add(exampleEvent, eventType), undefined, 'returns undefined if an event is already registered in development');
+	}
 });

@@ -1,7 +1,7 @@
 language: node_js
 node_js: node
 addons:
-  firefox: '51.0'
+  firefox: latest
 deploy:
   provider: npm
   email: core@donejs.com
@@ -11,6 +11,6 @@ deploy:
   'on':
     tags: true
     repo: canjs/can-dom-events
-dist: xenial
+dist: focal
 services:
   - xvfb
